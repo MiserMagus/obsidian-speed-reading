@@ -1,0 +1,32 @@
+{
+  "name": "speed-reading",
+  "version": "1.0.0",
+  "description": "A plugin to enable speed reading using the RSVP technique in obsidian.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LuisReinoso/obsidian-speed-reading"
+  },
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "speed-reading",
+    "RSVP"
+  ],
+  "author": "Luis Reinoso",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "eslint": "^9.24.0",
+    "obsidian": "latest",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.5"
+  }
+}

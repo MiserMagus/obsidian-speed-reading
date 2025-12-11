@@ -24,7 +24,7 @@ class SpeedReadModal extends Modal {
   private displayEl!: HTMLElement;
   private startPauseBtn!: HTMLButtonElement;
   private wpmInput!: HTMLInputElement;
-  private progressBar!: HTMLElement;
+  private progressBar: HTMLProgressElement | null = null;
 
   // For global spacebar handler
   private globalSpaceHandler: ((e: KeyboardEvent) => void) | null = null;
@@ -118,10 +118,17 @@ class SpeedReadModal extends Modal {
 
     // Focus the display area so it can receive keyboard events
     this.displayEl.focus();
-    // Progress bar
+    // Progress bar – use native <progress> so theme colours apply
     if (this.showProgressBar) {
-      this.progressBar = contentEl.createDiv({ cls: "rsvp-progress-bar" });
-      this.updateProgressBar();
+      this.progressBar = contentEl.createEl("progress", {
+        cls: "metadata-progress rsvp-progress-bar",
+      }) as HTMLProgressElement;
+
+      this.progressBar.max = this.words.length || 1;
+      this.progressBar.value = this.currentIndex + 1;
+      this.progressBar.setAttr("aria-label", "0 %");
+      this.progressBar.setAttr("data-tooltip-position", "top");
+      this.progressBar.setAttr("data-tooltip-delay", "500");
     }
 
     // Controls container
@@ -238,13 +245,15 @@ class SpeedReadModal extends Modal {
 
   private updateProgressBar() {
     if (!this.showProgressBar || !this.progressBar) return;
-    const percent = Math.min(100, ((this.currentIndex + 1) / this.words.length) * 100);
-    this.progressBar.style.width = "100%";
-    this.progressBar.style.height = "8px";
-    this.progressBar.style.background = "#444";
-    this.progressBar.style.borderRadius = "4px";
-    this.progressBar.style.marginBottom = "1em";
-    this.progressBar.innerHTML = `<div style="height:100%;width:${percent}%;background:#4f8cff;border-radius:4px;"></div>`;
+
+    const total = this.words.length || 1;
+    const current = this.currentIndex + 1;
+
+    this.progressBar.max = total;
+    this.progressBar.value = current;
+
+    const percent = Math.min(100, (current / total) * 100);
+    this.progressBar.setAttr("aria-label", `${Math.round(percent)} %`);
   }
 
   // Spritz-like pivot index calculation
